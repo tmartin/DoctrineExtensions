@@ -43,7 +43,7 @@ class SortableRepository extends EntityRepository
         $this->config = $this->listener->getConfiguration($this->_em, $this->meta->name);
     }
     
-    public function getBySortableGroupsQuery(array $groupValues=array())
+    public function getBySortableGroupsQueryBuilder(array $groupValues=array())
     {
         $groups = array_combine(array_values($this->config['groups']), array_keys($this->config['groups']));
         foreach ($groupValues as $name => $value) {
@@ -65,7 +65,13 @@ class SortableRepository extends EntityRepository
                ->setParameter('group'.$i, $value);
             $i++;
         }
-        return $qb->getQuery();
+        return $qb;
+    }
+
+    public function getBySortableGroupsQuery(array $groupValues = array())
+    {
+        $queryBuilder = $this->getBySortableGroupsQueryBuilder($groupValues);
+        return $queryBuilder->getQuery();
     }
     
     public function getBySortableGroups(array $groupValues=array())
